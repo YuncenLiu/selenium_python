@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 import time
 
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-driver = webdriver.Chrome("../driver/chromedriver")
+
+driver = webdriver.Chrome("../driver/chromedriver.exe")
 driver.get("https://wangxiao.xisaiwang.com/ucenter2/login.html")
 
 # 隐式等待 如果取元素的时候，如果找不到找不到整个元素，我最多等5秒，超过5秒就一场（推荐）
@@ -32,28 +36,53 @@ driver.find_element(By.CSS_SELECTOR, ".xpc-menu-box").find_elements_by_tag_name(
 time.sleep(0.5)
 driver.find_element(By.CSS_SELECTOR, ".xpc_tiku_tab .clearfix").find_elements_by_tag_name("li")[3].click()
 time.sleep(0.5)
-# 找到所有的 ti_item 元素
-ti_items = driver.find_element(By.ID, "dataList").find_elements_by_css_selector(".ti_item > div")
 
-# 遍历每个 ti_item 元素并打印文本内容
-# for ti_item in ti_items:
-#     item_text = ti_item.text.strip()
-#     print("ti_item 文本内容:", item_text)
-
-retest_links = driver.find_element(By.ID, "dataList").find_elements_by_xpath(
-    './/a[contains(@class, "tiku-list-item-fr") and contains(text(), "测试报告")]')
-
-test_links = driver.find_element(By.ID, "dataList").find_elements_by_xpath(
-    './/a[contains(@class, "tiku-list-item-fr") and contains(text(), "重新做题")]')
 
 # 遍历每个链接并打印其 href 属性
 # for link in retest_links:
 #     link_href = link.get_attribute('href')
 #     print("测试报告链接:", link_href)
 
-for item1, item2, item3 in zip(ti_items, retest_links, test_links):
-    # print("标题：", item1.text.strip(), "测试报告：", item2.get_attribute('href'), "重新做题：", item3.get_attribute('href'))
-    item3.click()
+for i in range(3):
+    # 找到所有的 ti_item 元素
+    ti_items = driver.find_element(By.ID, "dataList").find_elements_by_css_selector(".ti_item > div")
+
+    # 遍历每个 ti_item 元素并打印文本内容
+    # for ti_item in ti_items:
+    #     item_text = ti_item.text.strip()
+    #     print("ti_item 文本内容:", item_text)
+
+    retest_links = driver.find_element(By.ID, "dataList").find_elements_by_xpath(
+        './/a[contains(@class, "tiku-list-item-fr") and contains(text(), "测试报告")]')
+
+    test_links = driver.find_element(By.ID, "dataList").find_elements_by_xpath(
+        './/a[contains(@class, "tiku-list-item-fr") and contains(text(), "重新做题")]')
+    for item1, item2, item3 in zip(ti_items, retest_links, test_links):
+        print("标题：", item1.text.strip(), "测试报告：", item2.get_attribute('href'), "重新做题：", item3.get_attribute('href'))
+        # item2.click()
+        # all_handles = driver.window_handles
+        #
+        # # 切换到新窗口
+        # new_window_handle = None
+        # for handle in all_handles:
+        #     if handle != driver.current_window_handle:
+        #         new_window_handle = handle
+        #         driver.switch_to.window(new_window_handle)
+        #
+        #         # 等待新窗口中的元素加载完成（假设需要等待 h3 元素加载完毕）
+        #         getAna = WebDriverWait(driver, 10).until(
+        #             EC.presence_of_element_located((By.XPATH, "//div[@class='rep_new_Buts']/a"))
+        #         )
+        #         time.sleep(0.5)
+        #         getAna.click()
+        #         time.sleep(2)
+        #         driver.close()
+        # driver.switch_to.window(driver.window_handles[0])
+    if i != 2:
+        nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
+        nextBtn.click()
+        time.sleep(0.5)
+
 
 time.sleep(5)
 driver.quit()

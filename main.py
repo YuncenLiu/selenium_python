@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 
 if __name__ == '__main__':
 
-    driver = webdriver.Chrome("driver/chromedriver")
+    driver = webdriver.Chrome("driver/chromedriver.exe")
     driver.get("https://www.baidu.com")
 
     driver.find_element(By.CSS_SELECTOR,"#kw").send_keys("昆仑健康")
