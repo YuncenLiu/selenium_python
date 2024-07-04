@@ -14,7 +14,6 @@ CREATE TABLE s_subject
     paper_id  INT NOT NULL,
     sub_no    VARCHAR(100),
     sub_title VARCHAR(2000),
-    choose_id INT,
     sub_tag   VARCHAR(100),
     sub_info  VARCHAR(100),
     sub_ref   VARCHAR(2000)
