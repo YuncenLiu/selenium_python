@@ -56,7 +56,7 @@ def doPach(driver):
     # for link in retest_links:
     #     link_href = link.get_attribute('href')
     #     print("测试报告链接:", link_href)
-
+    count = 0
     for i in range(3):
         # 找到所有的 ti_item 元素
         ti_items = driver.find_element(By.ID, "dataList").find_elements_by_css_selector(".ti_item > div")
@@ -66,10 +66,20 @@ def doPach(driver):
 
         test_links = driver.find_element(By.ID, "dataList").find_elements_by_xpath(
             './/a[contains(@class, "tiku-list-item-fr") and contains(text(), "重新做题")]')
-        count = 0
         for item1, item2, item3 in zip(ti_items, retest_links, test_links):
+
             count = count + 1
+
+            # 控制从 第24题开始
+            if count < 28:
+                continue
+
             title = item1.text.strip()
+
+            # 控制从特定的题库进入
+            # if "系分讲义例题【第9章 项目管理】【2024版】" != title:
+            #     continue
+
             if item2 is None:
                 print(count, " - 标题：", title, "为空，跳过")
                 continue
@@ -85,10 +95,13 @@ def doPach(driver):
             p_type = ""
             if "案例" in title:
                 p_type = "案例"
+                continue
             elif "论文" in title:
                 p_type = "论文"
+                continue
             else:
                 p_type = "综合"
+
 
             insert_s_paper_sql = "insert into s_paper(p_type,p_title,p_report_url,p_do_url) value (%s,%s, %s,%s)"
             insert_s_paper_data = (p_type, title, testReport, doAgain)
