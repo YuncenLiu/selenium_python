@@ -1,0 +1,8 @@
+do_mryl = '每日一练'
+do_lnzt = '历年真题'
+do_mnsj = '模拟试卷'
+do_zjlx = '章节练习'
+do_zsdp = '知识点评'
+do_gpkd = '高频考点'
+do_gpct = '高频错题'
+do_lwfw = '论文范文'
