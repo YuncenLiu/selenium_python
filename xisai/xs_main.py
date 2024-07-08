@@ -5,7 +5,8 @@ import xs_do
 from subject import connDB
 
 # 如果为 Test 则只获取第一页，第一套试卷
-env = 'Test'
+# env = 'Test'
+env = 'Pro'
 
 # 2024-07-05
 # 方法入口
@@ -40,6 +41,6 @@ if __name__ == '__main__':
         print("程序异常:", e)
         # 在此处可以处理或重新引发异常
         raise  # 重新引发异常到上层调用
-    finally:
-        # 关闭
-        xs_driver.closeBrew(driver)
+    # finally:
+    #     # 关闭
+    #     xs_driver.closeBrew(driver)

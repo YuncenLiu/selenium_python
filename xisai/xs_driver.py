@@ -8,6 +8,7 @@ from selenium import webdriver
 
 system = platform.system()
 
+xiSaiHomeUrl = "https://wangxiao.xisaiwang.com"
 # 希赛登录地址
 xiSaiUrl = "https://wangxiao.xisaiwang.com/ucenter2/login.html"
 
