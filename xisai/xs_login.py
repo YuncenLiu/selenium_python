@@ -22,5 +22,9 @@ def login(driver):
     time.sleep(8)
 
     # 关闭提示按钮
-    driver.find_element(By.ID, "wj_modal").find_element(By.CSS_SELECTOR, ".wj_closepop_new").click()
+    try:
+        driver.find_element(By.ID, "wj_modal").find_element(By.CSS_SELECTOR, ".wj_closepop_new").click()
+    except Exception as e:
+        print('无须点击关闭提示按钮！')
+
     print('此时已经登录成功啦')
