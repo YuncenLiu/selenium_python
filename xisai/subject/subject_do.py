@@ -23,6 +23,7 @@ subjectTypeLW = '论文'
 
 
 def selectSubject(driver, index):
+    driver.implicitly_wait(5)
     time.sleep(0.5)
     # 点击开始做题
     driver.find_element(By.CSS_SELECTOR, ".xpc-menu-box").find_elements_by_tag_name("dl")[1].find_elements_by_tag_name(
@@ -39,14 +40,21 @@ def selectSubject(driver, index):
 
 
 def mrylSubject(driver, index):
+    driver.implicitly_wait(5)
+    pageIndex = 0
     # 循环一次 点击下一页
     for i in range(selectDayPage):
+        pageIndex = pageIndex + 1
         subjectPageEl = driver.find_element(By.CSS_SELECTOR, '.xpc_tiku_allcontent').find_element(By.ID, "dataList")
         # 试卷标题
         paperTitleList = subjectPageEl.find_elements(By.TAG_NAME, 'tr')
 
         # 每一题
+        # 当前遍历题的 下标，用于处理 继续做题时，页面跳转后重新定位到跳转呢按钮
+        pageSubIndex = 0
         for pageEl in paperTitleList:
+            pageSubIndex = pageSubIndex + 1
+
             # 获取测试标题
             paperTitle = pageEl.find_element(By.CSS_SELECTOR, '.ti_item').find_element(By.TAG_NAME, 'div').text.strip()
             # 获取最右侧两个按钮超链接
@@ -54,6 +62,8 @@ def mrylSubject(driver, index):
 
             paperReportUrl = ''
             paperDoUrl = ''
+
+            pageAny = None
 
             # 最右侧每一个按钮
             for pageAnyUrl in pageUrlEls:
@@ -71,15 +81,21 @@ def mrylSubject(driver, index):
                 if index == 0:
                     time.sleep(0.5)
                     if urlName == paperDoAgainUrlStr:
+                        urlName = pageAnyUrl.text.strip()
                         paperDoUrl = xs_driver.xiSaiHomeUrl + pageAnyUrl.get_attribute('data-accessuri')
+                        pageAny = pageAnyUrl
                     elif urlName == paperDoStartUrlStr:
                         url = pageAnyUrl.get_attribute('onclick')
                         start_index = url.find('(') + 1
                         end_index = url.find(')', start_index)
                         params = url[start_index:end_index]
+                        urlName = pageAnyUrl.text.strip()
                         paperDoUrl = xs_driver.xiSaiHomeUrl + params.split(',')[1].strip()[1:-1]
+                        pageAny = pageAnyUrl
                     elif urlName == paperDoUrlStr:
+                        urlName = pageAnyUrl.text.strip()
                         paperDoUrl = pageAnyUrl.get_attribute('href')
+                        pageAny = pageAnyUrl
 
             # 根据标题判断试卷类型
             paperType = ''
@@ -117,17 +133,17 @@ def mrylSubject(driver, index):
             # ---------------------------------------------------
             # 1、进一步解析题目  注意：这里的  pageUrlEls 需要经过判断才可用点击
             # ---------------------------------------------------
-            mrylSubjectDo(driver, pageUrlEls, paperId, paperType, index)
+            mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pageSubIndex, index)
 
             if xs_main.env == 'Test':
                 break
 
         if xs_main.env == 'Test':
             break
-        if i != selectPage - 1:
+        if i != selectDayPage - 1:
             nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
             nextBtn.click()
-            time.sleep(0.5)
+            time.sleep(3)
 
 
 # 章节练习
@@ -219,10 +235,92 @@ def zjlxSubject(driver, index):
             time.sleep(0.5)
 
 
-def mrylSubjectDo(driver, pageUrlEls, paperId, paperType, index):
+def mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pageSubIndex, index):
+    driver.implicitly_wait(5)
     # 将每一题的右侧按钮传递过来， 并点击重新做题
     openFlag = True
 
+    # 判断是否为继续做题，继续做题会信弹出窗口点击
+    if pageAny.text.strip() == paperDoAgainUrlStr:
+
+        current_url = driver.current_url
+
+        original_window = driver.current_window_handle
+        driver.execute_script("window.open();")
+        # 获取所有窗口的句柄
+        all_windows = driver.window_handles
+        # 寻找新窗口的句柄，排除原始窗口
+        new_window = None
+        for window in all_windows:
+            if window != original_window:
+                new_window = window
+                break
+        driver.switch_to.window(new_window)
+        driver.get(current_url)
+        time.sleep(1)
+
+        # 跳转到之前反转的页面，翻的页面数越多，重复翻的时长越长
+        for i in range(pageIndex-1):
+            nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
+            nextBtn.click()
+            time.sleep(1)
+
+        pageEl = \
+        driver.find_element(By.CSS_SELECTOR, '.xpc_tiku_allcontent').find_element(By.ID, "dataList").find_elements(
+            By.TAG_NAME, 'tr')[pageSubIndex - 1]
+        pageUrlEls = pageEl.find_elements_by_tag_name("td")[3].find_elements(By.TAG_NAME, 'a')
+        for pageAnyUrl in pageUrlEls:
+            urlName = pageAnyUrl.text.strip()
+            if urlName == paperDoAgainUrlStr:
+                pageAnyUrl.click()
+                doAgainEl = \
+                    driver.find_element(By.CSS_SELECTOR, '.layui-layer-content').find_element(By.CSS_SELECTOR,
+                                                                                              '.continue-wrap').find_elements(
+                        By.TAG_NAME, 'a')[1]
+                # 二次确认，点击重新考试
+                doAgainEl.click()
+                time.sleep(0.5)
+
+                mrylGetSubjectDo(driver, paperId)
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+                time.sleep(0.5)
+    else:
+        # 点击后跳转到新页面
+        pageAny.click()
+        # 在新页面中进行操作，都需要这一个步骤
+        all_handles = driver.window_handles
+        new_window_handle = None
+        for handle in all_handles:
+            if handle != driver.current_window_handle:
+                new_window_handle = handle
+                driver.switch_to.window(new_window_handle)
+
+                mrylGetSubjectDo(driver, paperId)
+                driver.close()
+                time.sleep(0.5)
+        # 跳转到首页 - 拿回 driver 对象
+        driver.switch_to.window(driver.window_handles[0])
+        time.sleep(0.5)
+
+# 在每日一练中间页面环境点击 "练习模式" 进入题库
+def mrylGetSubjectDo(driver, paperId):
+    print(' ----- 开始获取题库 ')
+    getAna = driver.find_element(By.CSS_SELECTOR, '.ecv2_btns').find_elements(By.TAG_NAME, 'a')[1]
+    getAna.click()
+    # 点击进入每日一练题库
+    time.sleep(5)
+    # 点击展示答案与解析
+    getDaanEl = driver.find_element(By.CSS_SELECTOR, '.bottomCenter').find_elements(By.TAG_NAME, 'span')[1]
+    print(getDaanEl.text.strip())
+    getDaanEl.click()
+    print(' ----- 展示答案了 ')
+    time.sleep(5)
+    subject_zjlx.getZhSubject(driver, paperId)
+
+
+
+# 章节练习
 # driver 全局对象用于跳转
 # pageUrlEls 用于找到对应跳转按钮
 def zjlxSubjectDo(driver, pageUrlEls, paperId, paperType, index):
