@@ -13,7 +13,7 @@ env = 'Pro'
 if __name__ == '__main__':
 
     # 初始化数据库
-    connDB.initDb()
+    # connDB.initDb()
     # 获取 selenium 对象服务，并打开浏览器
     driver = xs_driver.getDriver()
     try:

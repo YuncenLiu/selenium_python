@@ -2,7 +2,7 @@ import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from . import subject_zjlx
+from . import subject_zjlx, subject_mryl
 from . import connDB
 from . import sql
 import xs_main
@@ -41,10 +41,12 @@ def selectSubject(driver, index):
 
 def mrylSubject(driver, index):
     driver.implicitly_wait(5)
+    paperNo = 0
     pageIndex = 0
     # 循环一次 点击下一页
     for i in range(selectDayPage):
         pageIndex = pageIndex + 1
+
         subjectPageEl = driver.find_element(By.CSS_SELECTOR, '.xpc_tiku_allcontent').find_element(By.ID, "dataList")
         # 试卷标题
         paperTitleList = subjectPageEl.find_elements(By.TAG_NAME, 'tr')
@@ -54,9 +56,12 @@ def mrylSubject(driver, index):
         pageSubIndex = 0
         for pageEl in paperTitleList:
             pageSubIndex = pageSubIndex + 1
+            paperNo = paperNo + 1
+
+
 
             # 获取测试标题
-            paperTitle = pageEl.find_element(By.CSS_SELECTOR, '.ti_item').find_element(By.TAG_NAME, 'div').text.strip()
+            paperTitle = pageEl.find_elements_by_tag_name("td")[0].text.strip()
             # 获取最右侧两个按钮超链接
             pageUrlEls = pageEl.find_elements_by_tag_name("td")[3].find_elements(By.TAG_NAME, 'a')
 
@@ -112,6 +117,13 @@ def mrylSubject(driver, index):
                 elif index == 3:
                     # 综合提醒（选择题）
                     paperType = subjectTypeZH
+
+
+
+            if paperNo < 98:
+                print('试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
+                      '重新做题：', paperDoUrl)
+                continue
 
             # 这里可以做数据插入动作
             insert_s_paper_data = (paperTitle, paperType, paperReportUrl, paperDoUrl)
@@ -305,18 +317,9 @@ def mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pa
 
 # 在每日一练中间页面环境点击 "练习模式" 进入题库
 def mrylGetSubjectDo(driver, paperId):
-    print(' ----- 开始获取题库 ')
     getAna = driver.find_element(By.CSS_SELECTOR, '.ecv2_btns').find_elements(By.TAG_NAME, 'a')[1]
     getAna.click()
-    # 点击进入每日一练题库
-    time.sleep(5)
-    # 点击展示答案与解析
-    getDaanEl = driver.find_element(By.CSS_SELECTOR, '.bottomCenter').find_elements(By.TAG_NAME, 'span')[1]
-    print(getDaanEl.text.strip())
-    getDaanEl.click()
-    print(' ----- 展示答案了 ')
-    time.sleep(5)
-    subject_zjlx.getZhSubject(driver, paperId)
+    subject_mryl.getZhSubject(driver, paperId)
 
 
 
