@@ -76,6 +76,7 @@ def initDb():
     cursor.execute(init_sql.createSubPic)
     cursor.execute(init_sql.createChoose)
     cursor.execute(init_sql.createPic)
+    cursor.execute(init_sql.truncateErr)
     cursor.execute('COMMIT;')
     cursor.close()
     conn.close()

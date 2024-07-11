@@ -63,3 +63,7 @@ createSubCh = """CREATE TABLE s_sub_ch
     sub_id INT NOT NULL,
     ch_id  INT NOT NULL
 );"""
+
+truncateErr = """
+truncate table s_err;
+"""

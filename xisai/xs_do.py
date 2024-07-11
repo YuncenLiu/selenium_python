@@ -17,7 +17,7 @@ def getSubject(subjectSet, driver):
             try:
                 subject_do.selectSubject(driver, 0)
             except Exception as e:
-                driver.close()
+                # driver.close()
                 driver.switch_to.window(driver.window_handles[0])
                 resultId = connDB.querySQL(sql.select_max_paper_id_sql)
                 errPaperId = resultId['id']

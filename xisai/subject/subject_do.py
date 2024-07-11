@@ -118,11 +118,13 @@ def mrylSubject(driver, index):
                     paperType = subjectTypeZH
 
             # 查询数据库中是否插入次试卷
-            result = connDB.querySQLParams(sql.select_count_s_paper_sql, (paperTitle, paperType))
+            result = connDB.querySQLParams(sql.select_count_s_paper_sql, (paperType, paperTitle))
             if result['ct'] > 0:
                 print('[试卷已存在数据库中，跳过] 试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
                       '重新做题：', paperDoUrl)
                 continue
+
+            time.sleep(6)
 
             # 这里可以做数据插入动作
             insert_s_paper_data = (paperType, paperTitle, paperReportUrl, paperDoUrl)
