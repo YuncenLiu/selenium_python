@@ -21,7 +21,6 @@ def getZhSubject(driver, paperId):
         time.sleep(0.8)
         # 展示答案
         getDaanEl = driver.find_element(By.CSS_SELECTOR, '.bottomCenter').find_elements(By.TAG_NAME, 'span')[1]
-        print(getDaanEl.text.strip())
         getDaanEl.click()
         time.sleep(0.8)
 
@@ -71,7 +70,6 @@ def getZhSubject(driver, paperId):
                 connDB.executeSQLParams(sql.insert_s_sub_pic_sql, insert_s_sub_pic_data)
 
         imgListStr = ", ".join(imgList)
-        print('题目中涉及的图片:', imgListStr)
 
         # 获取题目中的 选择题
         # -----------------------------------------------

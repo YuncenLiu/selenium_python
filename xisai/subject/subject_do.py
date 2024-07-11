@@ -124,7 +124,6 @@ def mrylSubject(driver, index):
                       '重新做题：', paperDoUrl)
                 continue
 
-            time.sleep(6)
 
             # 这里可以做数据插入动作
             insert_s_paper_data = (paperType, paperTitle, paperReportUrl, paperDoUrl)

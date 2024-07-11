@@ -63,7 +63,6 @@ def getZhSubject(driver, paperId):
                 connDB.executeSQLParams(sql.insert_s_sub_pic_sql, insert_s_sub_pic_data)
 
         imgListStr = ", ".join(imgList)
-        print('题目中涉及的图片:', imgListStr)
 
         # 获取题目中的 选择题
         # -----------------------------------------------
