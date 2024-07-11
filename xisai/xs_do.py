@@ -1,7 +1,11 @@
 import xs_constans
 from subject import subject_do
+from xisai.subject import connDB, sql
 
 chooseSubjectModule = "当前您选择的模块是："
+
+# 可以重试20次
+errMrylAgain = 20
 
 
 # 开始做题 输入需要获取的模块集合
@@ -9,7 +13,32 @@ def getSubject(subjectSet, driver):
     if xs_constans.do_mryl in subjectSet:
         # 每日一练
         print(chooseSubjectModule, xs_constans.do_mryl, 0)
-        subject_do.selectSubject(driver, 0)
+        for i in range(errMrylAgain):
+            try:
+                subject_do.selectSubject(driver, 0)
+            except Exception as e:
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+                resultId = connDB.querySQL(sql.select_max_paper_id_sql)
+                errPaperId = resultId['id']
+
+                resultTitle = connDB.querySQL(sql.select_max_paper_title_sql)
+                errPaperTitle = resultTitle['p_title']
+                print('==============> 失败的 paperId：', errPaperId, ' ======> 失败的 Title ：', errPaperTitle)
+
+                connDB.executeSQLParams(sql.insert_s_err_sql, (errPaperTitle))
+
+                connDB.executeSQLParams(sql.delete_init_choose_sql, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_pic_sql1, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_pic_sql2, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_sub_ch_sql, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_sub_pic_sql, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_sub_ref_pic_sql, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_subject_sql, (errPaperId))
+                connDB.executeSQLParams(sql.delete_init_paper_sql, (errPaperId))
+                print('当前已失败：', i, '次：错误原因是', e)
+
+
 
     if xs_constans.do_lnzt in subjectSet:
         # 历年真题
@@ -45,3 +74,4 @@ def getSubject(subjectSet, driver):
         # 论文范文
         print(chooseSubjectModule, xs_constans.do_lwfw, 7)
         subject_do.selectSubject(driver, 7)
+

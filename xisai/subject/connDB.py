@@ -38,6 +38,25 @@ def executeSQL(sql):
     conn.close()
     return id
 
+# 执行查询
+def querySQLParams(sql,data):
+    conn = getConn()
+    cursor = conn.cursor()
+    cursor.execute(sql,data)
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result
+
+# 执行查询
+def querySQL(sql):
+    conn = getConn()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result
 
 # 删库、重建 初始化操作
 def initDb():

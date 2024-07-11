@@ -11,6 +11,7 @@ import xs_driver
 # 章节练习一共三页
 selectPage = 3
 selectDayPage = 100
+
 paperReportUrlStr = '测试报告'
 paperDoUrlStr = '重新做题'
 paperDoStartUrlStr = '开始做题'
@@ -57,8 +58,6 @@ def mrylSubject(driver, index):
         for pageEl in paperTitleList:
             pageSubIndex = pageSubIndex + 1
             paperNo = paperNo + 1
-
-
 
             # 获取测试标题
             paperTitle = pageEl.find_elements_by_tag_name("td")[0].text.strip()
@@ -118,15 +117,15 @@ def mrylSubject(driver, index):
                     # 综合提醒（选择题）
                     paperType = subjectTypeZH
 
-
-
-            # if paperNo < 98:
-            #     print('试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
-            #           '重新做题：', paperDoUrl)
-            #     continue
+            # 查询数据库中是否插入次试卷
+            result = connDB.querySQLParams(sql.select_count_s_paper_sql, (paperTitle, paperType))
+            if result['ct'] > 0:
+                print('[试卷已存在数据库中，跳过] 试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
+                      '重新做题：', paperDoUrl)
+                continue
 
             # 这里可以做数据插入动作
-            insert_s_paper_data = (paperTitle, paperType, paperReportUrl, paperDoUrl)
+            insert_s_paper_data = (paperType, paperTitle, paperReportUrl, paperDoUrl)
             paperId = connDB.executeSQLParams(sql.insert_s_paper_sql, insert_s_paper_data)
 
             print('试卷主键：', paperId, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
@@ -272,14 +271,14 @@ def mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pa
         time.sleep(1)
 
         # 跳转到之前反转的页面，翻的页面数越多，重复翻的时长越长
-        for i in range(pageIndex-1):
+        for i in range(pageIndex - 1):
             nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
             nextBtn.click()
             time.sleep(1)
 
         pageEl = \
-        driver.find_element(By.CSS_SELECTOR, '.xpc_tiku_allcontent').find_element(By.ID, "dataList").find_elements(
-            By.TAG_NAME, 'tr')[pageSubIndex - 1]
+            driver.find_element(By.CSS_SELECTOR, '.xpc_tiku_allcontent').find_element(By.ID, "dataList").find_elements(
+                By.TAG_NAME, 'tr')[pageSubIndex - 1]
         pageUrlEls = pageEl.find_elements_by_tag_name("td")[3].find_elements(By.TAG_NAME, 'a')
         for pageAnyUrl in pageUrlEls:
             urlName = pageAnyUrl.text.strip()
@@ -315,12 +314,12 @@ def mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pa
         driver.switch_to.window(driver.window_handles[0])
         time.sleep(0.5)
 
+
 # 在每日一练中间页面环境点击 "练习模式" 进入题库
 def mrylGetSubjectDo(driver, paperId):
     getAna = driver.find_element(By.CSS_SELECTOR, '.ecv2_btns').find_elements(By.TAG_NAME, 'a')[1]
     getAna.click()
     subject_mryl.getZhSubject(driver, paperId)
-
 
 
 # 章节练习

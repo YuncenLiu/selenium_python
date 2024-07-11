@@ -57,3 +57,11 @@ CREATE TABLE s_sub_ch
     sub_id INT NOT NULL,
     ch_id  INT NOT NULL
 );
+
+
+DROP TABLE IF EXISTS s_err;
+CREATE TABLE s_err (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    paper_title varchar(100),
+    err_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
