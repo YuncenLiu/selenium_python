@@ -137,8 +137,8 @@ def getZhSubject(driver, paperId):
                 insert_s_pic_data = (img)
                 picId = connDB.executeSQLParams(sql.insert_s_pic_sql, insert_s_pic_data)
 
-                insert_s_sub_pic_data = (subId, picId)
-                connDB.executeSQLParams(sql.insert_s_sub_pic_sql, insert_s_sub_pic_data)
+                insert_s_sub_ref_pic_data = (subId, picId)
+                connDB.executeSQLParams(sql.insert_s_sub_ref_pic_sql, insert_s_sub_ref_pic_data)
 
         # 题目里的图片，按逗号分隔
         daanImg = ", ".join(daanImgList)

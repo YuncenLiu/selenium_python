@@ -120,10 +120,10 @@ def mrylSubject(driver, index):
 
 
 
-            if paperNo < 98:
-                print('试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
-                      '重新做题：', paperDoUrl)
-                continue
+            # if paperNo < 98:
+            #     print('试卷主键：', paperNo, '试卷标题：', paperTitle, '试卷类型：', paperType, '测试报告：', paperReportUrl,
+            #           '重新做题：', paperDoUrl)
+            #     continue
 
             # 这里可以做数据插入动作
             insert_s_paper_data = (paperTitle, paperType, paperReportUrl, paperDoUrl)
