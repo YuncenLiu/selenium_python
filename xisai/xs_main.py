@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # subjectSet.add(xs_constans.do_mryl)
     # subjectSet.add(xs_constans.do_lnzt)
     # subjectSet.add(xs_constans.do_mnsj)
-    # subjectSet.add(xs_constans.do_zjlx)
+    subjectSet.add(xs_constans.do_zjlx)
     # subjectSet.add(xs_constans.do_zsdp)
     # subjectSet.add(xs_constans.do_gpkd)
     # subjectSet.add(xs_constans.do_gpct)

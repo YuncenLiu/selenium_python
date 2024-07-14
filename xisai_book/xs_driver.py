@@ -9,6 +9,9 @@ from selenium import webdriver
 system = platform.system()
 
 studyBookUrl = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt210068.html"
+studyBook2Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt210184.html"
+studyBook3Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt250010084.html"
+studyBook4Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt250010090.html"
 
 MacDriverIndex = "Darwin"
 MacDriverFile = "../driver/chromedriver"
@@ -31,7 +34,7 @@ def getEnv():
 def getDriver():
     driverPath = getEnv()
     driver = webdriver.Chrome(driverPath)
-    driver.get(studyBookUrl)
+    driver.get(studyBook4Url)
     return driver
 
 
