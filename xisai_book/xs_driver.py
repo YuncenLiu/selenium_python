@@ -12,6 +12,7 @@ studyBookUrl = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt210068.html"
 studyBook2Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt210184.html"
 studyBook3Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt250010084.html"
 studyBook4Url = "https://wangxiao.xisaiwang.com/ucenter2/ebook/130/zt250010090.html"
+studyBook5Url = "http://10.5.1.150:8080/abi/ebibase/showreport.do?id=DATA&pw=Abcd!234&resid=EANA$2$2$1$ad332581d3bc4ab085d99183b916c9f2$511b79eb60f542cd8a95f962240d33c6&calcnow=true&showparams=true&%40xqzb=13J&%40zbxscj=%E5%90%88%E4%BD%9C%E6%B8%A0%E9%81%93"
 
 MacDriverIndex = "Darwin"
 MacDriverFile = "../driver/chromedriver"
@@ -34,7 +35,7 @@ def getEnv():
 def getDriver():
     driverPath = getEnv()
     driver = webdriver.Chrome(driverPath)
-    driver.get(studyBook4Url)
+    driver.get(studyBook5Url)
     return driver
 
 
