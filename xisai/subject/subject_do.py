@@ -147,15 +147,17 @@ def mrylSubject(driver, index):
             # ---------------------------------------------------
             mrylSubjectDo(driver, pageUrlEls, pageAny, paperId, paperType, pageIndex, pageSubIndex, index)
 
-            if xs_main.env == 'Test':
-                break
-
-        if xs_main.env == 'Test':
             break
-        if i != selectDayPage - 1:
-            nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
-            nextBtn.click()
-            time.sleep(3)
+            # if xs_main.env == 'Test':
+            #     break
+
+        break
+        # if xs_main.env == 'Test':
+        #     break
+        # if i != selectDayPage - 1:
+        #     nextBtn = driver.find_element(By.LINK_TEXT, "下一页")
+        #     nextBtn.click()
+        #     time.sleep(3)
 
 
 # 章节练习

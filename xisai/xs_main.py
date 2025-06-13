@@ -5,8 +5,8 @@ import xs_do
 from subject import connDB
 
 # 如果为 Test 则只获取第一页，第一套试卷
-# env = 'Test'
-env = 'Pro'
+env = 'Test'
+# env = 'Pro'
 
 # 2024-07-05
 # 方法入口
@@ -26,10 +26,10 @@ if __name__ == '__main__':
 
     # 需要爬取的范围
     subjectSet = set()
-    # subjectSet.add(xs_constans.do_mryl)
+    subjectSet.add(xs_constans.do_mryl)
     # subjectSet.add(xs_constans.do_lnzt)
     # subjectSet.add(xs_constans.do_mnsj)
-    subjectSet.add(xs_constans.do_zjlx)
+    # subjectSet.add(xs_constans.do_zjlx)
     # subjectSet.add(xs_constans.do_zsdp)
     # subjectSet.add(xs_constans.do_gpkd)
     # subjectSet.add(xs_constans.do_gpct)

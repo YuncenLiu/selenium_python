@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome("../driver/chromedriver")
+driver = webdriver.Chrome("../driver/chromedriver.exe")
 driver.get("https://www.baidu.com")
 
 driver.implicitly_wait(5)
